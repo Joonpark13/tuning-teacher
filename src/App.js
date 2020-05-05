@@ -1,46 +1,49 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Oscillator, Panner, Master } from 'tone';
+import React from 'react';
 import styled from 'styled-components';
-import './App.css';
+import { AppBar, Toolbar, Typography, Button } from '@material-ui/core';
+import GivenPitch from './GivenPitch';
+import YourPitch from './YourPitch';
 
-const ButtonWrapper = styled.div`
+const StyledToolbar = styled(Toolbar)`
   display: flex;
+  justify-content: space-between;
 `;
 
-function useOscillator(pitch, type, pan) {
-  const osc = useRef(null);
-  const [isPlaying, setIsPlaying] = useState(false);
+const BodyWrapper = styled.div`
+  padding: 16px;
+`;
 
-  useEffect(() => {
-    osc.current = new Oscillator(pitch, type).chain(new Panner(pan), Master);
-  }, []);
-
-  function togglePlaying() {
-    if (isPlaying) {
-      osc.current.stop();
-    } else {
-      osc.current.start();
-    }
-    setIsPlaying(!isPlaying);
-  }
-
-  return [isPlaying, togglePlaying, osc.current];
-}
+const SectionWrapper = styled.section`
+  margin-bottom: 16px;
+`;
 
 function App() {
-  const [inTunePitchIsPlaying, toggleInTunePitch] = useOscillator(440, 'triangle', -1);
-  const [outOfTunePitchIsPlaying, toggleOutOfTunePitch] = useOscillator(450, 'sine', 1);
 
   return (
     <main>
-      <ButtonWrapper>
-        <button onClick={toggleInTunePitch}>
-          {inTunePitchIsPlaying ? 'Stop' : 'Play'}
-        </button>
-        <button onClick={toggleOutOfTunePitch}>
-          {outOfTunePitchIsPlaying ? 'Stop' : 'Play'}
-        </button>
-      </ButtonWrapper>
+      <AppBar position="static">
+        <StyledToolbar>
+          <Typography variant="h6">
+            Tuning Teacher 
+          </Typography>
+          <Button color="inherit">New Pitch</Button>
+        </StyledToolbar>
+      </AppBar>
+      <BodyWrapper>
+        <SectionWrapper>
+          <Typography variant="body2">
+            Nudge <strong>your pitch</strong> (right ear) to match the <strong>given pitch</strong> (left ear), then press submit to see how close you were.
+          </Typography>
+        </SectionWrapper>
+
+        <SectionWrapper>
+          <GivenPitch pitch={440} />
+        </SectionWrapper>
+
+        <SectionWrapper>
+          <YourPitch />
+        </SectionWrapper>
+      </BodyWrapper>
     </main>
   );
 }
