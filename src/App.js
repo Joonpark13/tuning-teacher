@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { AppBar, Toolbar, Typography, Button } from '@material-ui/core';
 import Pitch from './Pitch';
 import Controls from './Controls';
-import { useSynth } from './hooks';
+import { useSynth, usePressAndHold } from './hooks';
 import { HARD_LEFT, HARD_RIGHT } from './constants';
 
 const StyledToolbar = styled(Toolbar)`
@@ -28,6 +28,8 @@ const PitchWrapper = styled.section`
 function App() {
   const given = useSynth(440, 0, 'triangle', HARD_LEFT);
   const your = useSynth(440, 10, 'sine', HARD_RIGHT);
+  const [onIncrementPress, onIncrementRelease] = usePressAndHold(() => your.changePitch(0.5));
+  const [onDecrementPress, onDecrementRelease] = usePressAndHold(() => your.changePitch(-0.5));
 
   function handlePlayBoth() {
     if (given.isPlaying && your.isPlaying) {
@@ -69,9 +71,11 @@ function App() {
         <Controls
           isBothPlaying={given.isPlaying && your.isPlaying}
           playBoth={handlePlayBoth}
+          incrementPress={onIncrementPress}
+          incrementRelease={onIncrementRelease}
+          decrementPress={onDecrementPress}
+          decrementRelease={onDecrementRelease}
           pitchControlDisabled={!your.isPlaying}
-          incrementPitch={() => your.changePitch(5)}
-          decrementPitch={() => your.changePitch(-5)}
         />
       </BodyWrapper>
     </main>

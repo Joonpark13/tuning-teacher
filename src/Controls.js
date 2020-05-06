@@ -29,7 +29,15 @@ const StyledButton = styled(Button)`
   margin-bottom: 12px;
 `;
 
-function Controls({ isBothPlaying, playBoth, incrementPitch, decrementPitch, pitchControlDisabled }) {
+function Controls({
+  isBothPlaying,
+  playBoth,
+  incrementPress,
+  incrementRelease,
+  decrementPress,
+  decrementRelease,
+  pitchControlDisabled
+}) {
   return (
     <Card>
       <CardContent>
@@ -50,10 +58,22 @@ function Controls({ isBothPlaying, playBoth, incrementPitch, decrementPitch, pit
           </MiscControlsWrapper>
 
           <PitchShiftButtonsWrapper>
-            <StyledFab onClick={incrementPitch} disabled={pitchControlDisabled}>
+            <StyledFab
+              onMouseDown={incrementPress}
+              onMouseUp={incrementRelease}
+              onTouchStart={incrementPress}
+              onTouchEnd={incrementRelease}
+              disabled={pitchControlDisabled}
+            >
               ♯
             </StyledFab>
-            <Fab onClick={decrementPitch} disabled={pitchControlDisabled}>
+            <Fab
+              onMouseDown={decrementPress}
+              onMouseUp={decrementRelease}
+              onTouchStart={decrementPress}
+              onTouchEnd={decrementRelease}
+              disabled={pitchControlDisabled}
+            >
               ♭
             </Fab>
           </PitchShiftButtonsWrapper>
@@ -66,8 +86,10 @@ function Controls({ isBothPlaying, playBoth, incrementPitch, decrementPitch, pit
 Controls.propTypes = {
   isBothPlaying: PropTypes.bool,
   playBoth: PropTypes.func,
-  incrementPitch: PropTypes.func,
-  decrementPitch: PropTypes.func,
+  incrementPress: PropTypes.func,
+  incrementRelease: PropTypes.func,
+  decrementPress: PropTypes.func,
+  decrementRelease: PropTypes.func,
   pitchControlDisabled: PropTypes.bool,
 };
 

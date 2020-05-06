@@ -10,7 +10,7 @@ export function useSynth(pitch, detune = 0, type = 'triangle', pan = 0) {
 
   useEffect(() => {
     synth.current = new Synth({ oscillator: { type } }).chain(new Panner(pan), Master);
-    synth.current.portamento = 0.05;
+    synth.current.portamento = 0.01;
     synth.current.volume.value = gainToDb(INITIAL_VOLUME / 100);
     synth.current.detune.value = detune;
   }, []);
@@ -42,4 +42,25 @@ export function useSynth(pitch, detune = 0, type = 'triangle', pan = 0) {
     volume: volumePercent,
     setVolume,
   };
+}
+
+export function usePressAndHold(handler) {
+  let holding = false;
+
+  function onPress() {
+    holding = true;
+    const id = setInterval(() => {
+      if (!holding) {
+        clearInterval(id);
+      } else {
+        handler();
+      }
+    }, 50);
+  }
+
+  function onRelease() {
+    holding = false;
+  }
+
+  return [onPress, onRelease];
 }
