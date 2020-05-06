@@ -26,8 +26,8 @@ const PitchWrapper = styled.section`
 `;
 
 function App() {
-  const given = useSynth(440, 'triangle', HARD_LEFT);
-  const your = useSynth(450, 'sine', HARD_RIGHT);
+  const given = useSynth(440, 0, 'triangle', HARD_LEFT);
+  const your = useSynth(440, 10, 'sine', HARD_RIGHT);
 
   function handlePlayBoth() {
     if (given.isPlaying && your.isPlaying) {
@@ -69,6 +69,9 @@ function App() {
         <Controls
           isBothPlaying={given.isPlaying && your.isPlaying}
           playBoth={handlePlayBoth}
+          pitchControlDisabled={!your.isPlaying}
+          incrementPitch={() => your.changePitch(5)}
+          decrementPitch={() => your.changePitch(-5)}
         />
       </BodyWrapper>
     </main>

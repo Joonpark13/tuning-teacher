@@ -29,7 +29,7 @@ const StyledButton = styled(Button)`
   margin-bottom: 12px;
 `;
 
-function Controls({ isBothPlaying, playBoth }) {
+function Controls({ isBothPlaying, playBoth, incrementPitch, decrementPitch, pitchControlDisabled }) {
   return (
     <Card>
       <CardContent>
@@ -50,10 +50,10 @@ function Controls({ isBothPlaying, playBoth }) {
           </MiscControlsWrapper>
 
           <PitchShiftButtonsWrapper>
-            <StyledFab>
+            <StyledFab onClick={incrementPitch} disabled={pitchControlDisabled}>
               ♯
             </StyledFab>
-            <Fab>
+            <Fab onClick={decrementPitch} disabled={pitchControlDisabled}>
               ♭
             </Fab>
           </PitchShiftButtonsWrapper>
@@ -65,7 +65,10 @@ function Controls({ isBothPlaying, playBoth }) {
 
 Controls.propTypes = {
   isBothPlaying: PropTypes.bool,
-  playBoth: PropTypes.func
+  playBoth: PropTypes.func,
+  incrementPitch: PropTypes.func,
+  decrementPitch: PropTypes.func,
+  pitchControlDisabled: PropTypes.bool,
 };
 
 export default Controls;

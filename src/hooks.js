@@ -3,16 +3,16 @@ import { Synth, Panner, Master, gainToDb } from 'tone';
 
 const INITIAL_VOLUME = 85;
 
-export function useSynth(initialPitch, type = 'triangle', pan = 0) {
+export function useSynth(pitch, detune = 0, type = 'triangle', pan = 0) {
   const synth = useRef(null);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [pitch, setPitch] = useState(initialPitch);
   const [volumePercent, setVolumePercent] = useState(INITIAL_VOLUME);
 
   useEffect(() => {
     synth.current = new Synth({ oscillator: { type } }).chain(new Panner(pan), Master);
-    synth.current.portamento = 0.1;
+    synth.current.portamento = 0.05;
     synth.current.volume.value = gainToDb(INITIAL_VOLUME / 100);
+    synth.current.detune.value = detune;
   }, []);
 
   function startPlaying() {
@@ -25,10 +25,8 @@ export function useSynth(initialPitch, type = 'triangle', pan = 0) {
     setIsPlaying(false);
   }
 
-  function changePitch(offset) {
-    const newPitch = pitch + offset;
-    setPitch(newPitch);
-    synth.setNote(newPitch);
+  function changePitch(offsetCents) {
+    synth.current.detune.value = synth.current.detune.value + offsetCents;
   }
 
   function setVolume(newVolumePercent) {
@@ -42,6 +40,6 @@ export function useSynth(initialPitch, type = 'triangle', pan = 0) {
     stopPlaying,
     changePitch,
     volume: volumePercent,
-    setVolume
+    setVolume,
   };
 }
