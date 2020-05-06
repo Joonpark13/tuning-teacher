@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { Synth, Panner, Master, gainToDb } from 'tone';
 
-const INITIAL_VOLUME = 90;
+const INITIAL_VOLUME = 85;
 
 export function useSynth(initialPitch, type = 'triangle', pan = 0) {
   const synth = useRef(null);
