@@ -1,12 +1,9 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { AppBar, Toolbar, Typography, Button } from '@material-ui/core';
-import { PlayArrow, Stop } from '@material-ui/icons';
-import Pitch from './Pitch';
-import Controls from './Controls';
-import ResultDialog from './ResultDialog';
-import { useSynth, usePressAndHold } from './hooks';
-import { HARD_LEFT, HARD_RIGHT } from './constants';
+import { v4 } from 'uuid';
+import { AppBar, Toolbar, Typography, Button, Snackbar } from '@material-ui/core';
+import { Alert } from '@material-ui/lab';
+import Main from './Main';
 
 const StyledToolbar = styled(Toolbar)`
   display: flex;
@@ -17,51 +14,18 @@ const BodyWrapper = styled.div`
   padding: 16px;
 `;
 
-const SectionWrapper = styled.section`
-  margin-bottom: 16px;
-`;
-
-const PitchWrapper = styled.section`
-  display: flex;
-  justify-content: space-around;
-  margin-bottom: 8px;
-`;
-
-const PlayBothButtonWrapper = styled.div`
-  display: flex;
-  justify-content: center;
-`;
-
 function App() {
-  const given = useSynth(440, 0, 'triangle', HARD_LEFT);
-  const your = useSynth(440, 10, 'sine', HARD_RIGHT);
-  const [onIncrementPress, onIncrementRelease] = usePressAndHold(() => your.changePitch(0.1));
-  const [onDecrementPress, onDecrementRelease] = usePressAndHold(() => your.changePitch(-0.1));
-  const [isResultDialogOpen, setIsResultDialogOpen] = useState(false);
+  const [key, setKey] = useState(v4());
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
 
-  const isBothPlaying = given.isPlaying && your.isPlaying;
-
-  function handlePlayBoth() {
-    if (given.isPlaying && your.isPlaying) {
-      given.stopPlaying();
-      your.stopPlaying();
-    } else if (!given.isPlaying && !your.isPlaying) {
-      given.startPlaying();
-      your.startPlaying();
-    } else if (!given.isPlaying) {
-      given.startPlaying();
-    } else {
-      your.startPlaying();
-    }
+  function handleNewPitch() {
+    setKey(v4());
+    setSnackbarOpen(true);
   }
 
-  function handleSubmit() {
-    setIsResultDialogOpen(true);
-    if (given.isPlaying) {
-      given.stopPlaying();
-    }
-    if (your.isPlaying) {
-      your.stopPlaying();
+  function handleCloseSnackbar(event, reason) {
+    if (reason !== 'clickaway') {
+      setSnackbarOpen(false);
     }
   }
 
@@ -72,52 +36,21 @@ function App() {
           <Typography variant="h6">
             Tuning Teacher 
           </Typography>
-          <Button color="inherit">New Pitch</Button>
+          <Button color="inherit" onClick={handleNewPitch}>
+            New Pitch
+          </Button>
         </StyledToolbar>
       </AppBar>
 
       <BodyWrapper>
-        <SectionWrapper>
-          <Typography variant="body2">
-            Nudge <strong>your pitch</strong> (right ear) to match the <strong>given pitch</strong> (left ear), then press submit to see how close you were.
-          </Typography>
-        </SectionWrapper>
-
-        <SectionWrapper>
-          <PitchWrapper>
-            <Pitch title="Given Pitch" {...given} />
-            <Pitch title="Your Pitch" {...your} />
-          </PitchWrapper>
-
-          <PlayBothButtonWrapper>
-            <Button
-              variant="outlined"
-              color="primary"
-              startIcon={isBothPlaying ? <Stop /> : <PlayArrow />}
-              onClick={handlePlayBoth}
-            >
-              {isBothPlaying ? 'Stop' : 'Play'} Both
-            </Button>
-          </PlayBothButtonWrapper>
-        </SectionWrapper>
-
-        <Controls
-          incrementPress={onIncrementPress}
-          incrementRelease={onIncrementRelease}
-          decrementPress={onDecrementPress}
-          decrementRelease={onDecrementRelease}
-          pitchControlDisabled={!your.isPlaying}
-          onReset={your.resetPitch}
-          onSubmit={handleSubmit}
-        />
-
-        <ResultDialog
-          open={isResultDialogOpen}
-          onClose={() => setIsResultDialogOpen(false)}
-          centsOff={your.currentOffset}
-          onNewPitch={() => {}}
-        />
+        <Main key={key} onNewPitch={handleNewPitch} />
       </BodyWrapper>
+
+      <Snackbar open={snackbarOpen} autoHideDuration={4000} onClose={handleCloseSnackbar}>
+        <Alert severity="success">
+          New pitch initialized.
+        </Alert>
+      </Snackbar>
     </main>
   );
 }

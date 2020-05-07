@@ -3,8 +3,10 @@ import { Synth, Panner, Master, gainToDb } from 'tone';
 
 const INITIAL_VOLUME = 85;
 
-export function useSynth(pitch, detune = 0, type = 'triangle', pan = 0) {
+export function useSynth(initialPitch, initialDetune = 0, type = 'triangle', pan = 0) {
   const synth = useRef(null);
+  const [pitch] = useState(initialPitch);
+  const [detune] = useState(initialDetune);
   const [isPlaying, setIsPlaying] = useState(false);
   const [volumePercent, setVolumePercent] = useState(INITIAL_VOLUME);
 
@@ -13,6 +15,10 @@ export function useSynth(pitch, detune = 0, type = 'triangle', pan = 0) {
     synth.current.portamento = 0.005;
     synth.current.volume.value = gainToDb(INITIAL_VOLUME / 100);
     synth.current.detune.value = detune;
+
+    return () => {
+      synth.current.triggerRelease();
+    };
   }, []);
 
   function startPlaying() {

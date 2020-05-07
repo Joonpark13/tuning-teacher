@@ -50,6 +50,6 @@ export default function ResultDialog({ open, onClose, centsOff, onNewPitch }) {
 ResultDialog.propTypes = {
   open: PropTypes.bool,
   onClose: PropTypes.func,
-  centsOff: PropTypes.bool,
+  centsOff: PropTypes.number,
   onNewPitch: PropTypes.func,
 };
