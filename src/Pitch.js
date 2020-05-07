@@ -5,7 +5,10 @@ import { Button, Slider, Typography, Menu, MenuItem } from '@material-ui/core';
 import { PlayArrow, Stop, ExpandMore } from '@material-ui/icons';
 
 const Container = styled.div`
-  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 116px;
 `;
 
 const StyledMenuItem = styled(MenuItem)`

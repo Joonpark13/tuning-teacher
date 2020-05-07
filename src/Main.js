@@ -13,6 +13,11 @@ const SectionWrapper = styled.section`
   margin-bottom: 16px;
 `;
 
+const InstructionWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+`;
+
 const PitchWrapper = styled.section`
   display: flex;
   justify-content: space-around;
@@ -22,6 +27,11 @@ const PitchWrapper = styled.section`
 const PlayBothButtonWrapper = styled.div`
   display: flex;
   justify-content: center;
+`;
+
+const MaxWidthWrapper = styled.div`
+  max-width: 600px;
+  margin: auto;
 `;
 
 function Main({ onNewPitch }) {
@@ -62,38 +72,42 @@ function Main({ onNewPitch }) {
   return (
     <div>
       <SectionWrapper>
-        <Typography variant="body2">
-          Nudge <strong>your pitch</strong> (right ear) to match the <strong>given pitch</strong> (left ear), then press submit to see how close you were.
-        </Typography>
+        <InstructionWrapper>
+          <Typography variant="body2">
+            Nudge <strong>your pitch</strong> (right ear) to match the <strong>given pitch</strong> (left ear), then press submit to see how close you were.
+          </Typography>
+        </InstructionWrapper>
       </SectionWrapper>
 
-      <SectionWrapper>
-        <PitchWrapper>
-          <Pitch title="Given Pitch" {...given} />
-          <Pitch title="Your Pitch" {...your} />
-        </PitchWrapper>
+      <MaxWidthWrapper>
+        <SectionWrapper>
+          <PitchWrapper>
+            <Pitch title="Given Pitch" {...given} />
+            <Pitch title="Your Pitch" {...your} />
+          </PitchWrapper>
 
-        <PlayBothButtonWrapper>
-          <Button
-            variant="outlined"
-            color="primary"
-            startIcon={isBothPlaying ? <Stop /> : <PlayArrow />}
-            onClick={handlePlayBoth}
-          >
-            {isBothPlaying ? 'Stop' : 'Play'} Both
-          </Button>
-        </PlayBothButtonWrapper>
-      </SectionWrapper>
+          <PlayBothButtonWrapper>
+            <Button
+              variant="outlined"
+              color="primary"
+              startIcon={isBothPlaying ? <Stop /> : <PlayArrow />}
+              onClick={handlePlayBoth}
+            >
+              {isBothPlaying ? 'Stop' : 'Play'} Both
+            </Button>
+          </PlayBothButtonWrapper>
+        </SectionWrapper>
 
-      <Controls
-        incrementPress={onIncrementPress}
-        incrementRelease={onIncrementRelease}
-        decrementPress={onDecrementPress}
-        decrementRelease={onDecrementRelease}
-        pitchControlDisabled={!your.isPlaying}
-        onReset={your.resetPitch}
-        onSubmit={handleSubmit}
-      />
+        <Controls
+          incrementPress={onIncrementPress}
+          incrementRelease={onIncrementRelease}
+          decrementPress={onDecrementPress}
+          decrementRelease={onDecrementRelease}
+          pitchControlDisabled={!your.isPlaying}
+          onReset={your.resetPitch}
+          onSubmit={handleSubmit}
+        />
+      </MaxWidthWrapper>
 
       <ResultDialog
         open={isResultDialogOpen}
