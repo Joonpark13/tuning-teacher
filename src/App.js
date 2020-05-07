@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { AppBar, Toolbar, Typography, Button } from '@material-ui/core';
 import { PlayArrow, Stop } from '@material-ui/icons';
 import Pitch from './Pitch';
 import Controls from './Controls';
+import ResultDialog from './ResultDialog';
 import { useSynth, usePressAndHold } from './hooks';
 import { HARD_LEFT, HARD_RIGHT } from './constants';
 
@@ -34,8 +35,9 @@ const PlayBothButtonWrapper = styled.div`
 function App() {
   const given = useSynth(440, 0, 'triangle', HARD_LEFT);
   const your = useSynth(440, 10, 'sine', HARD_RIGHT);
-  const [onIncrementPress, onIncrementRelease] = usePressAndHold(() => your.changePitch(0.5));
-  const [onDecrementPress, onDecrementRelease] = usePressAndHold(() => your.changePitch(-0.5));
+  const [onIncrementPress, onIncrementRelease] = usePressAndHold(() => your.changePitch(0.1));
+  const [onDecrementPress, onDecrementRelease] = usePressAndHold(() => your.changePitch(-0.1));
+  const [isResultDialogOpen, setIsResultDialogOpen] = useState(false);
 
   const isBothPlaying = given.isPlaying && your.isPlaying;
 
@@ -50,6 +52,16 @@ function App() {
       given.startPlaying();
     } else {
       your.startPlaying();
+    }
+  }
+
+  function handleSubmit() {
+    setIsResultDialogOpen(true);
+    if (given.isPlaying) {
+      given.stopPlaying();
+    }
+    if (your.isPlaying) {
+      your.stopPlaying();
     }
   }
 
@@ -96,6 +108,14 @@ function App() {
           decrementRelease={onDecrementRelease}
           pitchControlDisabled={!your.isPlaying}
           onReset={your.resetPitch}
+          onSubmit={handleSubmit}
+        />
+
+        <ResultDialog
+          open={isResultDialogOpen}
+          onClose={() => setIsResultDialogOpen(false)}
+          centsOff={your.currentOffset}
+          onNewPitch={() => {}}
         />
       </BodyWrapper>
     </main>
