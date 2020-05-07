@@ -29,6 +29,10 @@ export function useSynth(pitch, detune = 0, type = 'triangle', pan = 0) {
     synth.current.detune.value = synth.current.detune.value + offsetCents;
   }
 
+  function resetPitch() {
+    synth.current.detune.value = detune;
+  }
+
   function setVolume(newVolumePercent) {
     synth.current.volume.value = gainToDb(newVolumePercent / 100);
     setVolumePercent(newVolumePercent);
@@ -41,6 +45,7 @@ export function useSynth(pitch, detune = 0, type = 'triangle', pan = 0) {
     changePitch,
     volume: volumePercent,
     setVolume,
+    resetPitch,
   };
 }
 

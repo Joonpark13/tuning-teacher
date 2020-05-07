@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { AppBar, Toolbar, Typography, Button } from '@material-ui/core';
+import { PlayArrow, Stop } from '@material-ui/icons';
 import Pitch from './Pitch';
 import Controls from './Controls';
 import { useSynth, usePressAndHold } from './hooks';
@@ -22,7 +23,12 @@ const SectionWrapper = styled.section`
 const PitchWrapper = styled.section`
   display: flex;
   justify-content: space-around;
-  margin-bottom: 16px;
+  margin-bottom: 8px;
+`;
+
+const PlayBothButtonWrapper = styled.div`
+  display: flex;
+  justify-content: center;
 `;
 
 function App() {
@@ -30,6 +36,8 @@ function App() {
   const your = useSynth(440, 10, 'sine', HARD_RIGHT);
   const [onIncrementPress, onIncrementRelease] = usePressAndHold(() => your.changePitch(0.5));
   const [onDecrementPress, onDecrementRelease] = usePressAndHold(() => your.changePitch(-0.5));
+
+  const isBothPlaying = given.isPlaying && your.isPlaying;
 
   function handlePlayBoth() {
     if (given.isPlaying && your.isPlaying) {
@@ -63,19 +71,31 @@ function App() {
           </Typography>
         </SectionWrapper>
 
-        <PitchWrapper>
-          <Pitch title="Given Pitch" {...given} />
-          <Pitch title="Your Pitch" {...your} />
-        </PitchWrapper>
+        <SectionWrapper>
+          <PitchWrapper>
+            <Pitch title="Given Pitch" {...given} />
+            <Pitch title="Your Pitch" {...your} />
+          </PitchWrapper>
+
+          <PlayBothButtonWrapper>
+            <Button
+              variant="outlined"
+              color="primary"
+              startIcon={isBothPlaying ? <Stop /> : <PlayArrow />}
+              onClick={handlePlayBoth}
+            >
+              {isBothPlaying ? 'Stop' : 'Play'} Both
+            </Button>
+          </PlayBothButtonWrapper>
+        </SectionWrapper>
 
         <Controls
-          isBothPlaying={given.isPlaying && your.isPlaying}
-          playBoth={handlePlayBoth}
           incrementPress={onIncrementPress}
           incrementRelease={onIncrementRelease}
           decrementPress={onDecrementPress}
           decrementRelease={onDecrementRelease}
           pitchControlDisabled={!your.isPlaying}
+          onReset={your.resetPitch}
         />
       </BodyWrapper>
     </main>

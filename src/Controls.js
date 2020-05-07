@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Button, Card, CardContent, Fab } from '@material-ui/core';
-import { PlayArrow, Stop } from '@material-ui/icons';
 
 const ControlsWrapper = styled.div`
   display: flex;
@@ -30,29 +29,24 @@ const StyledButton = styled(Button)`
 `;
 
 function Controls({
-  isBothPlaying,
-  playBoth,
   incrementPress,
   incrementRelease,
   decrementPress,
   decrementRelease,
-  pitchControlDisabled
+  pitchControlDisabled,
+  onReset,
+  onSubmit
 }) {
   return (
     <Card>
       <CardContent>
         <ControlsWrapper>
           <MiscControlsWrapper>
-            <StyledButton
-              variant="outlined"
-              color="primary"
-              startIcon={isBothPlaying ? <Stop /> : <PlayArrow />}
-              onClick={playBoth}
-            >
-              {isBothPlaying ? 'Stop' : 'Play'} Both
+            <StyledButton variant="outlined" color="primary" onClick={onReset}>
+              Reset My Pitch
             </StyledButton>
 
-            <Button variant="contained" color="primary">
+            <Button variant="contained" color="primary" onClick={onSubmit}>
               Submit
             </Button>
           </MiscControlsWrapper>
@@ -84,13 +78,13 @@ function Controls({
 };
 
 Controls.propTypes = {
-  isBothPlaying: PropTypes.bool,
-  playBoth: PropTypes.func,
   incrementPress: PropTypes.func,
   incrementRelease: PropTypes.func,
   decrementPress: PropTypes.func,
   decrementRelease: PropTypes.func,
   pitchControlDisabled: PropTypes.bool,
+  onReset: PropTypes.func,
+  onSubmit: PropTypes.func,
 };
 
 export default Controls;

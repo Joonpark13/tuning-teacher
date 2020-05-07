@@ -12,9 +12,7 @@ const StyledMenuItem = styled(MenuItem)`
   height: 180px;
 `;
 
-const ButtonWrapper = styled.div`
-  display: flex;
-  justify-content: center;
+const StyledButton = styled(Button)`
   margin-bottom: 8px;
 `;
 
@@ -39,16 +37,14 @@ export default function Pitch({ title, isPlaying, startPlaying, stopPlaying, vol
     <Container>
       <Title variant="h6">{title}</Title>
 
-      <ButtonWrapper>
-        <Button
-          variant="outlined"
-          color="primary"
-          onClick={isPlaying ? stopPlaying : startPlaying}
-          startIcon={isPlaying ? <Stop /> : <PlayArrow />}
-        >
-          {isPlaying ? 'Stop' : 'Play'}
-        </Button>
-      </ButtonWrapper>
+      <StyledButton
+        variant="outlined"
+        color="primary"
+        onClick={isPlaying ? stopPlaying : startPlaying}
+        startIcon={isPlaying ? <Stop /> : <PlayArrow />}
+      >
+        {isPlaying ? 'Stop' : 'Play'}
+      </StyledButton>
 
       <Button
         startIcon={<ExpandMore />}
