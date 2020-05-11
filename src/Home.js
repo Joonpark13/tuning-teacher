@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Typography, Button } from '@material-ui/core';
@@ -7,7 +7,12 @@ import Pitch from './Pitch';
 import Controls from './Controls';
 import ResultDialog from './ResultDialog';
 import { useSynth, usePressAndHold } from './hooks';
+import { SettingsContext } from './context';
 import { HARD_LEFT, HARD_RIGHT, NOTES } from './constants';
+
+const BodyWrapper = styled.div`
+  padding: 16px;
+`;
 
 const SectionWrapper = styled.section`
   margin-bottom: 16px;
@@ -34,8 +39,14 @@ const MaxWidthWrapper = styled.div`
   margin: auto;
 `;
 
-function Main({ onNewPitch }) {
-  const initialPitch = NOTES[Math.floor(Math.random() * NOTES.length)];
+function getNotePool(lower, upper) {
+  return NOTES.slice(NOTES.indexOf(lower), NOTES.indexOf(upper) + 1);
+}
+
+function Home({ onNewPitch }) {
+  const [settings] = useContext(SettingsContext);
+  const NOTE_POOL = getNotePool(settings.pitchRange.lower, settings.pitchRange.upper);
+  const initialPitch = NOTE_POOL[Math.floor(Math.random() * NOTE_POOL.length)];
   const randomOffset = Math.floor(Math.random() * 150) - 75; // up to 75 cents above or below the initial pitch
   const given = useSynth(initialPitch, 0, 'triangle', HARD_LEFT);
   const your = useSynth(initialPitch, randomOffset, 'sine', HARD_RIGHT);
@@ -70,7 +81,7 @@ function Main({ onNewPitch }) {
   }
 
   return (
-    <div>
+    <BodyWrapper>
       <SectionWrapper>
         <InstructionWrapper>
           <Typography variant="body2">
@@ -115,12 +126,12 @@ function Main({ onNewPitch }) {
         centsOff={your.currentOffset}
         onNewPitch={onNewPitch}
       />
-    </div>
+    </BodyWrapper>
   );
 }
 
-Main.propTypes = {
+Home.propTypes = {
   onNewPitch: PropTypes.func,
 };
 
-export default Main;
+export default Home;
