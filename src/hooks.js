@@ -76,3 +76,12 @@ export function usePressAndHold(handler) {
 
   return [onPress, onRelease];
 }
+
+export function useLocalStorageState(initialState, storageKey) {
+  const [state, setter] = useState(JSON.parse(window.localStorage.getItem(storageKey)) || initialState);
+  function setState(newValue) {
+    setter(newValue);
+    window.localStorage.setItem(storageKey, JSON.stringify(newValue));
+  }
+  return [state, setState];
+}

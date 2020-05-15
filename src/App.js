@@ -6,6 +6,7 @@ import { Alert } from '@material-ui/lab';
 import Home from './Home';
 import Settings from './Settings';
 import { SettingsContext } from './context';
+import { useLocalStorageState } from './hooks';
 import { NORTHWESTERN_PURPLE, NORTHWESTERN_PURPLE_10, RICH_BLACK_80 } from './colors';
 
 const theme = createMuiTheme({
@@ -38,7 +39,7 @@ function App() {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [currentTab, setCurrentTab] = useState(0);
 
-  const settingsState = useState(initialSettings);
+  const settingsState = useLocalStorageState(initialSettings, 'settings');
 
   function handleNewPitch() {
     setKey(v4());
