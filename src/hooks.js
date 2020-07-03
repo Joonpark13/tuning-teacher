@@ -19,7 +19,7 @@ export function useSynth(initialPitch, initialDetune = 0, type = 'triangle', pan
     return () => {
       synth.current.triggerRelease();
     };
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   function startPlaying() {
     synth.current.triggerAttack(pitch);
